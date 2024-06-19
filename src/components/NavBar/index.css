@@ -1,0 +1,7 @@
+.Nav_Bar {
+  background-color: white;
+  padding: calc(var(--site-unit) * 10) calc(var(--site-unit) * 20);
+  border: 1px solid #bbbbbb;
+  border-left: 0px;
+  min-height: calc(var(--site-unit) * 65);
+}

@@ -1,0 +1,7 @@
+.SiteCard {
+  padding: calc(var(--site-unit) * 20);
+  background: white;
+  border-radius: calc(var(--site-unit) * 15);
+  border: 1px solid #bbbbbb;
+  min-height: 100%;
+}

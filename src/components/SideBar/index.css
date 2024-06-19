@@ -1,0 +1,110 @@
+.SideBar {
+  min-height: 100vh;
+  width: calc(var(--site-unit) * 300);
+  border-right: 1px solid #bbbbbb;
+}
+.SideBar .Logo_Holder {
+  padding: calc(var(--site-unit) * 30);
+}
+.SideBar .Logo_Holder > h1 {
+  margin: 0;
+}
+
+.SideBar .SideBar_Actions ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.SideBar .SideBar_Actions ul > li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: calc(var(--site-unit) * 10) calc(var(--site-unit) * 30);
+}
+.SideBar .SideBar_Actions ul > li::before {
+  content: "";
+  background: red;
+  height: 100%;
+  width: 0;
+  position: absolute;
+  z-index: -1;
+  transition: 0.3s all ease-in-out;
+}
+.SideBar .SideBar_Actions ul > li:hover::before {
+  width: 100%;
+}
+.SideBar .SideBar_Actions ul > li > a {
+  text-decoration: none;
+  color: black;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--site-unit) * 15);
+  cursor: pointer;
+}
+.SideBar .SideBar_Actions ul > li > a > span {
+  margin-top: 5px;
+}
+.SideBar .SideBar_Actions ul > li > a > p {
+  margin: 0;
+  font-size: calc(var(--site-unit) * 25);
+  font-weight: 500;
+}
+
+/* .shadow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 100%;
+  bottom: 0;
+  z-index: -1;
+  background-color: rgb(0 0 0 / 30%);
+} */
+
+.SideBare_Trigger {
+  position: absolute;
+  display: none;
+  right: -20%;
+  top: calc(var(--site-unit) * 58);
+  width: calc(var(--site-unit) * 150);
+  height: calc(var(--site-unit) * 150);
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 1px 19px -4px black;
+  background: white;
+  transform: rotate(180deg);
+  transition: 0.3s all ease-in-out;
+  z-index: 99;
+}
+
+@media (max-width: 799px) {
+  .SideBar {
+    position: absolute;
+    left: -50%;
+    width: 50%;
+    transition: 0.3s all ease-in-out;
+    background-color: white;
+    /* z-index: 99; */
+  }
+
+  .SideBar .SideBar_Actions ul > li > a > p {
+    margin: 0;
+    font-size: calc(var(--site-unit) * 70);
+    font-weight: 500;
+  }
+  .SideBar .SideBar_Actions ul > li > a {
+    gap: calc(var(--site-unit) * 30);
+  }
+  .SideBare_Trigger {
+    display: flex;
+  }
+  .SideBar.active {
+    left: 0;
+  }
+  .SideBar.active > .shadow {
+    right: 0;
+  }
+  .SideBar.active > .SideBare_Trigger {
+    transform: rotate(0deg);
+  }
+}

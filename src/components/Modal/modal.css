@@ -1,0 +1,142 @@
+.backdrop.exploreE {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(113, 113, 125, 0.5);
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal.modal-open {
+    position: relative;
+  }
+  
+  .backdrop.exploreE:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    filter: blur(8px);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Blur(PixelRadius=8)";
+    background-image: inherit;
+    z-index: -1;
+  }
+  .close_btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 6px;
+  }
+  
+  .backdrop.normal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(113 113 125 / 5%);
+    z-index: 999999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+  }
+  .modal.modal-open {
+    border: 2px solid #d7d7d7;
+  }
+  
+  .modal {
+    position: relative;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out;
+    height: 0;
+    overflow: hidden;
+    z-index: 9999999;
+  }
+  
+  .modal.modal-open {
+    opacity: 1;
+    height: auto;
+    animation: bounce 0.9s;
+    transition: all 0.3s ease-in-out !important;
+  }
+  
+  .container_image {
+    width: calc(100% - 10%);
+    border: 1px solid #403e4b;
+    border-radius: 3px;
+  }
+  
+  .modal.modal-open {
+    width: 55%;
+    height: 75%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: auto;
+    border-radius: 13px;
+    transition: all 0.3s ease-in-out !important;
+  }
+  
+  .modal-content {
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-fade-enter {
+    opacity: 0;
+    height: 0;
+    transition: all 0.3s ease-in-out !important;
+  }
+  
+  .modal-fade-enter-active {
+    opacity: 1;
+    height: auto;
+    transition: all 0.3s ease-in-out !important;
+  }
+  
+  .modal-fade-exit {
+    opacity: 1;
+    height: auto;
+    transition: all 0.3s ease-in-out !important;
+  }
+  
+  .modal-fade-exit-active {
+    opacity: 0;
+    height: 0;
+    transition: all 0.3s ease-in-out !important;
+  }
+  
+  @keyframes bounce {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
+  @media only screen and (max-width: 1600px) {
+    .modal.modal-open {
+      width: 80%;
+      height: 93%;
+    }
+  }
+  

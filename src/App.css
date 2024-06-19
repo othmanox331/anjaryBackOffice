@@ -1,0 +1,48 @@
+/* .app_container {
+  width: 100vw;
+  margin: 0 auto;
+  background: f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: auto;
+} */
+
+:root {
+  --site-unit: 0.05vw;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+}
+
+.wrapper {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+}
+.wrapper > .Content {
+  background-color: #e9e9e9;
+  width: calc(100% - (calc(var(--site-unit) * 300)));
+}
+.wrapper > .Content > .Main_Content {
+  padding: calc(var(--site-unit) * 30);
+  min-height: 100%;
+}
+@media (max-width: 799px) {
+  .wrapper > .Content {
+    width: 100%;
+  }
+}
