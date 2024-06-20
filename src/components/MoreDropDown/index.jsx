@@ -10,7 +10,7 @@ import DeleteForever from "@mui/icons-material/DeleteForever";
 import MenuButton from "@mui/joy/MenuButton";
 import Dropdown from "@mui/joy/Dropdown";
 
-export default function PositionedMenu() {
+export default ({}) => {
   return (
     <Dropdown>
       <MenuButton

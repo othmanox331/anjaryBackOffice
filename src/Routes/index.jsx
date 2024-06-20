@@ -1,6 +1,6 @@
 import React from "react";
 import { useRoutes, BrowserRouter as Router } from "react-router-dom";
-import { Home, Orders } from "@screens";
+import { Home, Orders, Products, Category } from "@screens";
 import { useSelector } from "react-redux";
 import { SideBar, NavBar } from "@components";
 import Row from "react-bootstrap/Row";
@@ -11,8 +11,10 @@ const AppLoggedRoutes = () => {
     { path: "/", element: <Home /> },
     // { path: "*", element: <Home /> },
     { path: "/Orders", element: <Orders /> },
+    { path: "/Products", element: <Products /> },
+    { path: "/Categories", element: <Category /> },
   ]);
-  console.log(routes);
+
   return (
     <div className="wrapper">
       <SideBar></SideBar>
