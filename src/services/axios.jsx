@@ -1,14 +1,4 @@
-import { URL } from "@common";
-import axios from "axios";
-
-const backend = axios.create({
-  baseURL: URL,
-  headers: { "Content-Type": "application/json" },
-});
-const backend_for_files = axios.create({
-  baseURL: URL,
-  headers: { "Content-Type": "multipart/form-data" },
-});
+import { backend } from "./apis";
 
 const APIs = {
   Order: {
@@ -56,21 +46,11 @@ const APIs = {
   Slider: {
     addNewSlider: async (params) => {
       try {
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTkwMTQ2MDEsImlzcyI6IkFuamFyeVN0b3JlLmNvbSIsImF1ZCI6IkFuamFyeVN0b3JlIn0.7K811rlEmL99KKtHV_J6xUGHOSJTAvxqzH6cTB0ekI0"; // Replace with actual token retrieval logic
-        const response = await backend_for_files.post(
-          `/images/addslider`,
-          params,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-            },
-          }
-        );
-        
-        return  {...response};
+        const response = await backend.post(`/images/addslider`, params);
+
+        return { ...response };
       } catch (error) {
-        return {...error?.response}
+        return { ...error?.response };
       }
     },
     List: async () => {

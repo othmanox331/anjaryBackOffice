@@ -1,10 +1,8 @@
 import React from "react";
 import { useRoutes, BrowserRouter as Router } from "react-router-dom";
-import { Home, Orders, Products, Category , Sliders} from "@screens";
+import { Home, Orders, Products, Category, Sliders, Register, Login } from "@screens";
 import { useSelector } from "react-redux";
 import { SideBar, NavBar } from "@components";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 
 const AppLoggedRoutes = () => {
   let routes = useRoutes([
@@ -33,13 +31,17 @@ const getTitle = (route) => {
   return path == "/" ? "Dashboard" : path.replace("/", "");
 };
 
+const GuestRoutes = () => {
+  let routes = useRoutes([
+    { path: "/", element: <Login /> },
+    { path: "*", element: <Login /> },
+    { path: "/register", element: <Register /> }
+  ]);
+  return <div className="Main_Content">{routes}</div>;
+};
+
 export default ({}) => {
   const { user, isLogged } = useSelector(({ account }) => account);
 
-  return (
-    <Router>
-      {" "}
-      <AppLoggedRoutes />{" "}
-    </Router>
-  );
+  return <Router>{!isLogged && !user ? <GuestRoutes /> : <AppLoggedRoutes />}</Router>;
 };
