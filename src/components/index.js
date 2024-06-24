@@ -12,6 +12,7 @@ import Quantity from "./Quantity";
 import UserDropDown from "./UserDropDown";
 import MoreDropDown from "./MoreDropDown";
 import DragAndDrop from "./DragAndDrop";
+import Uploader from "./Uploader";
 
 export {
   Button,
@@ -28,4 +29,5 @@ export {
   UserDropDown,
   MoreDropDown,
   DragAndDrop,
+  Uploader,
 };

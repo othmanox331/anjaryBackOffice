@@ -6,12 +6,14 @@ import { BiSolidCategory } from "react-icons/bi";
 import { IoIosArrowBack } from "react-icons/io";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
+import { FaSliders } from "react-icons/fa6";
 
 const links = [
   { tab: "Home", action: "/", icon: "Home" },
   { tab: "Orders", action: "Orders", icon: "Orders" },
   { tab: "Products", action: "Products", icon: "Products" },
   { tab: "Categories", action: "Categories", icon: "Categories" },
+  { tab: "Sliders", action: "Sliders", icon: "Sliders" },
 ];
 const index = () => {
   const navigate = useNavigate();
@@ -44,6 +46,9 @@ const index = () => {
         break;
       case "Categories":
         return <BiSolidCategory size={iconSize} />;
+        break;
+      case "Sliders":
+        return <FaSliders size={iconSize} />;
         break;
     }
   };

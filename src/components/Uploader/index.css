@@ -1,0 +1,17 @@
+.container_drop {
+    display: flex;
+    min-height: 130px;
+    overflow-x: hidden;
+    position: relative;
+    margin-top: 13px;
+    border: 1px dashed gray;
+    border-radius: 15px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .dropzone {
+    width: 80%;
+    text-align: center;
+  }

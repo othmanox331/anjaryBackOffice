@@ -1,14 +1,4 @@
-import { URL } from "@common";
-import axios from "axios";
-
-const backend = axios.create({
-  baseURL: URL,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTkwNzQ3NzAsImlzcyI6IkFuamFyeVN0b3JlLmNvbSIsImF1ZCI6IkFuamFyeVN0b3JlIn0.o6_ZBO7tuRchJK3Va6zJD7tFOFj7YIV8YHU4qgHzX_w",
-  },
-});
+import { backend } from "./apis";
 
 const APIs = {
   Order: {
@@ -88,6 +78,31 @@ const APIs = {
       try {
         const response = await backend.get(`${URL}category/` + id);
         return response.data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+      }
+    },
+  },
+  Slider: {
+    addNewSlider: async (params) => {
+      try {
+        const response = await backend.post(`/images/addslider`, params);
+
+        return { ...response };
+      } catch (error) {
+        return { ...error?.response };
+      }
+    },
+    List: async () => {
+      try {
+        const response = await backend.get(`/images/getsliders`);
+        if (Array.isArray(response.data)) {
+          return response;
+        } else {
+          // Transform the response data to an array if necessary
+          return Object.values(response.data);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
         throw error;
