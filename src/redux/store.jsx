@@ -7,22 +7,22 @@ import accountReducer from "./account/reducer";
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const persistConfig = {
-	key: "root",
-	storage,
-	blacklist: [
-		// "account",
-	],
+  key: "root",
+  storage,
+  blacklist: [
+    // "account",
+  ],
 };
 
 const rootReducer = combineReducers({
-	account: accountReducer
+  account: accountReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = createStore(
-	persistedReducer,
-	composeEnhancer(applyMiddleware(thunk)),
+  persistedReducer,
+  composeEnhancer(applyMiddleware(thunk))
 );
 const persistor = persistStore(store);
 

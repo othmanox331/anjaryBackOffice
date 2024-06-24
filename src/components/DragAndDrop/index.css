@@ -1,0 +1,55 @@
+/* src/ImageUploadPreview.css */
+
+.dropzone_container {
+  width: 100%;
+  height: 350px;
+  padding: 20px;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.dropzone {
+  padding: 20px;
+  border: 2px dashed #007bff;
+  border-radius: 10px;
+  cursor: pointer;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.previews {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.preview {
+  position: relative;
+  margin: 10px;
+}
+
+.preview img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.preview button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

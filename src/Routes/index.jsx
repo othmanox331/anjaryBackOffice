@@ -1,6 +1,6 @@
 import React from "react";
 import { useRoutes, BrowserRouter as Router } from "react-router-dom";
-import { Home, Orders, Products, Category } from "@screens";
+import { Home, Orders, Products, Category, Login } from "@screens";
 import { useSelector } from "react-redux";
 import { SideBar, NavBar } from "@components";
 import Row from "react-bootstrap/Row";
@@ -26,6 +26,11 @@ const AppLoggedRoutes = () => {
   );
 };
 
+const App401Routes = () => {
+  return <Login />;
+};
+("");
+
 const getTitle = (route) => {
   let output = "";
   let path = route.props.match.route.path;
@@ -35,10 +40,5 @@ const getTitle = (route) => {
 export default ({}) => {
   const { user, isLogged } = useSelector(({ account }) => account);
 
-  return (
-    <Router>
-      {" "}
-      <AppLoggedRoutes />{" "}
-    </Router>
-  );
+  return <Router>{isLogged ? <AppLoggedRoutes /> : <App401Routes />}</Router>;
 };

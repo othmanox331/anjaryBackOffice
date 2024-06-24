@@ -11,6 +11,7 @@ import Select from "./Select";
 import Quantity from "./Quantity";
 import UserDropDown from "./UserDropDown";
 import MoreDropDown from "./MoreDropDown";
+import DragAndDrop from "./DragAndDrop";
 
 export {
   Button,
@@ -25,5 +26,6 @@ export {
   Select,
   Quantity,
   UserDropDown,
-  MoreDropDown
+  MoreDropDown,
+  DragAndDrop,
 };
