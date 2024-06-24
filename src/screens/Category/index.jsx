@@ -11,6 +11,7 @@ import { Bounce, toast } from "react-toastify";
 
 const Categories = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [UpdateId, setUpdateId] = useState(0);
   const [isUpdateModal, setIsUpdateModal] = useState(false);
   const [categories, setCategories] = useState([]);
   const [size, setSize] = useState(10);
@@ -40,10 +41,18 @@ const Categories = () => {
     });
   };
   const handelUpdate = async (id) => {
-    const response = await APIs.Category.GetById(id);
-    console.log("====================================");
-    console.log(response);
-    console.log("====================================");
+    try {
+      const response = await APIs.Category.GetById(id);
+      setUpdateId(response.id);
+      setCategoryInputs({
+        name: response.Name,
+        isHome: response.IsHome,
+        title: response.Title,
+      });
+      setIsModalOpen(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handelDelete = (id) => {};
 
@@ -68,7 +77,7 @@ const Categories = () => {
         transition: Bounce,
       });
 
-      //fetchOrders();
+      fetchCategories();
       setIsModalOpen(false);
       clearModal();
     } else {

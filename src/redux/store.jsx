@@ -10,7 +10,7 @@ const persistConfig = {
   key: "root",
   storage,
   blacklist: [
-    // "account",
+    // "account"
   ],
 };
 

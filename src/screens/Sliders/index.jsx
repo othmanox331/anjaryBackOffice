@@ -32,8 +32,15 @@ const Sliders = () => {
 
   const getListOfSlider = async () => {
     setIsLoading(true);
-    const sliderList = await APIs.Slider.List();
-    setSliders(sliderList.data);
+    try {
+      const sliderList = await APIs.Slider.List();
+
+      setSliders(sliderList.data);
+    } catch (error) {
+      toast.error("Error getting data");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleAddSlider = async () => {

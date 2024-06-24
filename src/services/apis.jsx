@@ -3,6 +3,7 @@ import axios from "axios";
 import { store } from "../redux/store";
 import { toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
+import { LOGOUT } from "@redux/account/types";
 
 export const backend = axios.create({
   baseURL: URL,

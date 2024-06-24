@@ -3,8 +3,16 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Image from "react-bootstrap/Image";
 import avatar from "../../../src/assets/Images/avatar.png";
 import { FaChevronDown } from "react-icons/fa"; // Import an arrow icon
+import { useDispatch, useSelector } from "react-redux";
+import { LOGOUT } from "@redux/account/types";
 
 export default function PositionedMenu() {
+  const { user } = useSelector((data) => data.account);
+  const dispatch = useDispatch();
+
+  const handelLogout = () => {
+    dispatch({ type: LOGOUT });
+  };
   return (
     <Dropdown>
       <Dropdown.Toggle
@@ -14,15 +22,13 @@ export default function PositionedMenu() {
       >
         <div className="d-flex align-items-center">
           <Image src={avatar} roundedCircle width={40} />
-          <p className="mx-3 my-0 text-black">othmane anouari</p>
+          <p className="mx-3 my-0 text-black">{user.useName}</p>
           <FaChevronDown color="black" />
         </div>
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Dropdown.Item href="#action/3.1">Action</Dropdown.Item>
-        <Dropdown.Item href="#action/3.2">Another action</Dropdown.Item>
-        <Dropdown.Item href="#action/3.3">Something else here</Dropdown.Item>
+        <Dropdown.Item onClick={handelLogout}>Log Out</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

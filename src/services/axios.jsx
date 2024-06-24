@@ -4,7 +4,7 @@ const APIs = {
   Order: {
     Add: async (params) => {
       try {
-        const response = await backend.post(`${URL}order/add`, params);
+        const response = await backend.post(`/order/add`, params);
         return response.data;
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -14,7 +14,7 @@ const APIs = {
 
     List: async () => {
       try {
-        const response = await backend.get(`${URL}order/list`);
+        const response = await backend.get(`/order/list`);
         if (Array.isArray(response.data)) {
           return response.data;
         } else {
@@ -30,7 +30,7 @@ const APIs = {
   Product: {
     SelectList: async () => {
       try {
-        const response = await backend.get(`${URL}product/selectlist`);
+        const response = await backend.get(`/product/selectlist`);
         if (Array.isArray(response.data)) {
           return response.data;
         } else {
@@ -51,7 +51,7 @@ const APIs = {
           page: page,
           searchValue: searchValue,
         };
-        const response = await backend.post(`${URL}category/list`, data);
+        const response = await backend.post(`/category/list`, data);
 
         return response.data;
       } catch (error) {
@@ -67,7 +67,7 @@ const APIs = {
         formData.append("Title", params.Title);
         formData.append("Image", params.Image);
 
-        const response = await backend.post(`${URL}category/add`, formData);
+        const response = await backend.post(`/category/add`, formData);
         return response.data;
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -76,7 +76,7 @@ const APIs = {
     },
     GetById: async (id) => {
       try {
-        const response = await backend.get(`${URL}category/` + id);
+        const response = await backend.get(`/category/` + id);
         return response.data;
       } catch (error) {
         console.error("Error fetching data:", error);
