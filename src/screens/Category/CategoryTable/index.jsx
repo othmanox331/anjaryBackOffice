@@ -8,10 +8,16 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { FaTrash } from "react-icons/fa";
-import { FaPen } from "react-icons/fa";
+import { FaTrash, FaPen } from "react-icons/fa";
+import { IoMdImage } from "react-icons/io";
+import { URL } from "@common";
 
-const CategoryTable = ({ categories, handelUpdate, handelDelete }) => {
+const CategoryTable = ({
+  categories,
+  handelUpdate,
+  handelDelete,
+  handelEditImage,
+}) => {
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -40,8 +46,16 @@ const CategoryTable = ({ categories, handelUpdate, handelDelete }) => {
                 >
                   <FaPen />
                 </button>
+                {category.isHome && (
+                  <button
+                    className="btn btn-light me-2"
+                    onClick={() => handelEditImage(category.id)}
+                  >
+                    <IoMdImage />
+                  </button>
+                )}
                 <button
-                  className="btn btn-danger"
+                  className="btn btn-danger "
                   onClick={() => handelDelete(category.id)}
                 >
                   <FaTrash />

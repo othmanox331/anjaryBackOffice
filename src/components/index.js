@@ -13,6 +13,7 @@ import UserDropDown from "./UserDropDown";
 import MoreDropDown from "./MoreDropDown";
 import DragAndDrop from "./DragAndDrop";
 import Uploader from "./Uploader";
+import Alert from "./Alert";
 
 export {
   Button,
@@ -30,4 +31,5 @@ export {
   MoreDropDown,
   DragAndDrop,
   Uploader,
+  Alert,
 };

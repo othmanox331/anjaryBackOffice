@@ -10,6 +10,7 @@
 }
 
 .dropzone {
+  width: 100% !important;
   padding: 20px;
   border: 2px dashed #007bff;
   border-radius: 10px;

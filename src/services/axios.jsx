@@ -1,4 +1,4 @@
-import { backend } from "./apis";
+import { backend, backend_form_data } from "./apis";
 
 const APIs = {
   Order: {
@@ -67,7 +67,29 @@ const APIs = {
         formData.append("Title", params.Title);
         formData.append("Image", params.Image);
 
-        const response = await backend.post(`/category/add`, formData);
+        const response = await backend_form_data.post(
+          `/category/add`,
+          formData
+        );
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+      }
+    },
+    Update: async (params) => {
+      try {
+        let formData = new FormData();
+        formData.append("id", params.id);
+        formData.append("Name", params.Name);
+        formData.append("IsHome", params.IsHome);
+        formData.append("Title", params.Title);
+        // formData.append("Image", params.Image);
+
+        const response = await backend_form_data.put(
+          `/category/update`,
+          formData
+        );
         return response.data;
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -80,6 +102,30 @@ const APIs = {
         return response.data;
       } catch (error) {
         console.error("Error fetching data:", error);
+        throw error;
+      }
+    },
+    Delete: async (id) => {
+      try {
+        const response = await backend.delete(`/category/delete?id=` + id);
+        return response.data;
+      } catch (error) {
+        console.error("Error deleting :", error);
+        throw error;
+      }
+    },
+    UpdateImage: async (id, image) => {
+      try {
+        let formData = new FormData();
+        formData.append("id", id);
+        formData.append("image", image.file);
+        const response = await backend_form_data.put(
+          `/category/image/update`,
+          formData
+        );
+        return response.data;
+      } catch (error) {
+        console.error("Error deleting :", error);
         throw error;
       }
     },
@@ -106,6 +152,16 @@ const APIs = {
       } catch (error) {
         console.error("Error fetching data:", error);
         throw error;
+      }
+    },
+  },
+  Images: {
+    getImage: async (name) => {
+      try {
+        const response = await backend.get(`/images/${name}`);
+        return response;
+      } catch (error) {
+        return { ...error?.response };
       }
     },
   },

@@ -9,8 +9,41 @@ export const backend = axios.create({
   baseURL: URL,
   headers: { "Content-Type": "application/json" },
 });
+export const backend_form_data = axios.create({
+  baseURL: URL,
+  headers: { "Content-Type": "multipart/form-data" },
+});
 
 backend.interceptors.request.use(
+  (config) => {
+    const access_token = store?.getState()?.account?.user?.token;
+    if (!!access_token) {
+      const { exp } = jwt_decode(access_token);
+      const DateExp = new Date(exp * 1000);
+      if (DateExp <= new Date()) {
+        store.dispatch({ type: LOGOUT });
+        toast.error(
+          "Votre compte a expiré, veuillez réessayer de vous connecter"
+        );
+        return config;
+      } else {
+        config.headers.Authorization = `Bearer ${access_token}`;
+        config.headers["Content-Type"] = "application/json";
+        return config;
+      }
+    }
+  },
+  (error) => {
+    if (error) {
+      store.dispatch({ type: LOGOUT });
+      toast.error(
+        "Votre compte a expiré, veuillez réessayer de vous connecter"
+      );
+      //   navigate("/");
+    }
+  }
+);
+backend_form_data.interceptors.request.use(
   (config) => {
     const access_token = store?.getState()?.account?.user?.token;
     if (!!access_token) {

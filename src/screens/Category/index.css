@@ -1,0 +1,10 @@
+.edit_image_button {
+  position: absolute;
+  background: white;
+  border: 1px solid;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  right: 10px;
+  top: 10px;
+}
