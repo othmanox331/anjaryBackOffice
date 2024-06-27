@@ -1,0 +1,9 @@
+.side_image img {
+  max-width: 100%;
+  cursor: pointer;
+}
+
+.image_side_holder {
+  max-height: 280px;
+  overflow-y: scroll;
+}

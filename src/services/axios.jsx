@@ -42,8 +42,27 @@ const APIs = {
         throw error;
       }
     },
+    List: async (params) => {
+      try {
+        const response = await backend.post(`/product/list`, params);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+      }
+    },
   },
   Category: {
+    SelectList: async () => {
+      try {
+        const response = await backend.get(`/category/select/list`);
+
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+      }
+    },
     List: async (size, page, searchValue) => {
       try {
         let data = {

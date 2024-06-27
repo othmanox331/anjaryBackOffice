@@ -79,6 +79,7 @@ const Sliders = () => {
           transition: Bounce,
         });
         setIsModalOpen(false);
+        getListOfSlider();
       } else {
         toast.error(sliders.statusText, {
           position: "bottom-right",

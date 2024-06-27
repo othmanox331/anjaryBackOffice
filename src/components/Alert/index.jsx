@@ -10,6 +10,7 @@ import Typography from "@mui/joy/Typography";
 
 export default function AlertColors({ messages, type, variant }) {
   const [_var, setVar] = React.useState(variant);
+  let cmpt = 0;
   return (
     <Box
       sx={{
@@ -21,7 +22,11 @@ export default function AlertColors({ messages, type, variant }) {
           <ul className="mb-0">
             {messages &&
               messages.map((item) => {
-                return <li className="mb-0">{item}</li>;
+                return (
+                  <li className="mb-0" key={++cmpt}>
+                    {item}
+                  </li>
+                );
               })}
           </ul>
         </Alert>

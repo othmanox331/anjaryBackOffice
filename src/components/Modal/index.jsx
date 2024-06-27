@@ -1,11 +1,18 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-function MyVerticallyCenteredModal({ title, children, onHide, show, onSave }) {
+function MyVerticallyCenteredModal({
+  title,
+  children,
+  onHide,
+  show,
+  onSave,
+  size = "lg",
+}) {
   return (
     <Modal
       show={show}
-      size="lg"
+      size={size}
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
