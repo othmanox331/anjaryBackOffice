@@ -25,6 +25,7 @@ const Products = () => {
   const [validateMessage, setValidateMessage] = useState([]);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     fetchProduct();
@@ -49,13 +50,21 @@ const Products = () => {
 
   const handleSubmit = () => {
     if (validate()) {
-      handleAddProduct(productInputs);
-      setIsModalOpen(false);
+      handleAddProduct({ ...productInputs, images });
+      // setIsModalOpen(false);
     }
   };
 
-  const handleAddProduct = (product) => {
-    console.log(product);
+  const handleAddProduct = async (product) => {
+    let newImages = [];
+    product.images.map((img) => {
+      newImages.push({
+        Image: img.Image,
+        isPrinciple: img.isPrinciple,
+      });
+    });
+    product.images = newImages;
+    await APIs.Product.Add(product);
   };
 
   const handelModalOpen = async () => {
@@ -103,6 +112,7 @@ const Products = () => {
   const handelCloseModal = () => {
     setIsModalOpen(false);
     setValidateMessage([]);
+
     clearModal();
   };
   const clearModal = () => {
@@ -114,6 +124,7 @@ const Products = () => {
       isBestSeller: false,
       category: 0,
     });
+    setImages([]);
   };
 
   return (
@@ -146,7 +157,7 @@ const Products = () => {
       >
         <Row>
           <Col md={6}>
-            <Images />
+            <Images images={images} setImages={setImages} />
           </Col>
           <Col md={6}>
             {validateMessage.length > 0 && (

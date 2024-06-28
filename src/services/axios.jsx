@@ -51,6 +51,29 @@ const APIs = {
         throw error;
       }
     },
+    Add: async (params) => {
+      try {
+        let formData = new FormData();
+        formData.append("Name", params.name);
+        formData.append("Description", params.description);
+        formData.append("Price", params.price);
+        formData.append("isBestSeller", params.isBestSeller);
+        formData.append("StockQuantity", params.stockQuantity);
+        formData.append("CategoryId", params.category);
+        // formData.append("ImagesString", JSON.stringify(params.images));
+        params.images.forEach((item, index) => {
+          formData.append(`Images[${index}].Image`, item.Image);
+          formData.append(`Images[${index}].ImageName`, "kjk");
+          formData.append(`Images[${index}].IsPrincipale`, item.isPrinciple);
+        });
+        console.log(params);
+        const response = await backend_form_data.post(`/product/add`, formData);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+      }
+    },
   },
   Category: {
     SelectList: async () => {

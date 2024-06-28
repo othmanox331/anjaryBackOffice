@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Tooltip from "react-bootstrap/Tooltip";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import unknown from "../../../common/unknown.png";
 import "./Images.css";
 
 const images_test = [
-  {
-    imageName: unknown,
-    isPrinciple: true,
-  },
-  // Other images if needed
+  // {
+  //   imageName: unknown,
+  //   isPrinciple: true,
+  // },
 ];
 
 const DefaultData = [
@@ -23,31 +24,22 @@ const DefaultData = [
   },
 ];
 
-const Images = () => {
-  const [images, setImages] = useState([]);
-  const [principleImage, setPrincipleImage] = useState(null);
+const Images = ({ images = [], setImages }) => {
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
-    if (images_test.length > 0 && images_test.length <= 1) {
-      DefaultData.forEach((t) => {
-        images_test.push(t);
-      });
-    }
-
-    setData(images_test);
+    setData(images);
   }, []);
 
   const setData = (images) => {
-    setImages(images.filter((t) => !t.isPrinciple));
-    setPrincipleImage(images.find((t) => t.isPrinciple));
+    setImages(images);
   };
 
   const handleClick = (imageName) => {
-    const updatedImages = images_test.map((image) => ({
+    const updatedImages = images.map((image) => ({
       ...image,
       isPrinciple: image.imageName === imageName,
     }));
-
     setData(updatedImages);
   };
 
@@ -58,49 +50,101 @@ const Images = () => {
       reader.onloadend = () => {
         const newImage = {
           imageName: reader.result,
+          Image: file,
           isPrinciple: true,
         };
+        const updatedImages = images.map((image) => ({
+          imagePath: image.imageName,
+          Image: image.Image,
+          isPrinciple: false,
+        }));
 
-        const oldPrincipleImage = principleImage
-          ? { ...principleImage, isPrinciple: false }
-          : null;
-
-        let updatedImages = [newImage, ...images];
-
-        if (oldPrincipleImage) {
-          updatedImages = [
-            newImage,
-            oldPrincipleImage,
-            ...images.filter((img) => img.imageName !== newImage.imageName),
-          ];
-        }
-
-        setData(updatedImages);
+        setData([newImage, ...updatedImages]);
       };
       reader.readAsDataURL(file);
     }
   };
 
+  const handleDelete = (imageName) => {
+    const updatedImages = images.filter((img) => img.imageName !== imageName);
+    setData(updatedImages);
+  };
+
+  const handlePrincipleClick = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <Row>
       <Col md="4 image_side_holder">
-        {images.map((item, index) => (
-          <div key={index} className="side_image mb-3">
-            <img
-              src={item.imageName}
-              alt={`Image ${index}`}
-              onClick={() => handleClick(item.imageName)}
-            />
-          </div>
-        ))}
+        <button onClick={handlePrincipleClick} className="mt-3">
+          Upload New Image
+        </button>
+
+        {images
+          .filter((img) => !img.isPrinciple)
+          .map((item, index) => (
+            <div key={index} className="side_image mb-3 position-relative">
+              <img
+                src={item.imageName}
+                alt={`Image ${index}`}
+                onClick={() => handleClick(item.imageName)}
+              />
+              {item.imageName !== unknown && (
+                <>
+                  <input
+                    type="radio"
+                    name="principleImage"
+                    checked={item.isPrinciple}
+                    onChange={() => handleClick(item.imageName)}
+                    className="position-absolute top-0 start-0 m-2"
+                  />
+                  <button
+                    onClick={() => handleDelete(item.imageName)}
+                    className="position-absolute top-0 end-0 m-2"
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
+            </div>
+          ))}
       </Col>
       <Col md="8">
-        {principleImage != null && (
-          <div className="side_image principle">
-            <img src={principleImage.imageName} alt="Principle Image" />
-            <input type="file" onChange={handleFileChange} />
-          </div>
+        {images.find((img) => img.isPrinciple) != null && (
+          <OverlayTrigger
+            overlay={
+              <Tooltip id="tooltip-principle">
+                Ceci est l'image principale
+              </Tooltip>
+            }
+          >
+            <div className="side_image principle position-relative">
+              <img
+                src={images.find((img) => img.isPrinciple).imageName}
+                alt="Principle Image"
+              />
+              {images.find((img) => img.isPrinciple).imageName != unknown && (
+                <button
+                  onClick={() =>
+                    handleDelete(
+                      images.find((img) => img.isPrinciple).imageName
+                    )
+                  }
+                  className="position-absolute top-0 end-0 m-2"
+                >
+                  Delete
+                </button>
+              )}
+            </div>
+          </OverlayTrigger>
         )}
+        <input
+          type="file"
+          onChange={handleFileChange}
+          hidden
+          ref={fileInputRef}
+        />
       </Col>
     </Row>
   );

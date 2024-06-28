@@ -8,6 +8,8 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import { FaTrash, FaPen } from "react-icons/fa";
+import { IoMdImage } from "react-icons/io";
 
 const ProductTable = ({ products }) => {
   return (
@@ -42,6 +44,26 @@ const ProductTable = ({ products }) => {
               </TableCell>
               <TableCell align="center">{product.category}</TableCell>
               <TableCell align="center">{product.id}</TableCell>
+              <TableCell align="center">
+                <button
+                  className="btn btn-secondary me-2"
+                  onClick={() => handelUpdate(product.id)}
+                >
+                  <FaPen />
+                </button>
+                <button
+                  className="btn btn-light me-2"
+                  onClick={() => handelEditImage(product.id)}
+                >
+                  <IoMdImage />
+                </button>
+                <button
+                  className="btn btn-danger "
+                  onClick={() => handelDelete(product.id)}
+                >
+                  <FaTrash />
+                </button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
