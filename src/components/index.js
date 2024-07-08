@@ -14,6 +14,7 @@ import MoreDropDown from "./MoreDropDown";
 import DragAndDrop from "./DragAndDrop";
 import Uploader from "./Uploader";
 import Alert from "./Alert";
+import Pagination from "./Pagination";
 
 export {
   Button,
@@ -32,4 +33,5 @@ export {
   DragAndDrop,
   Uploader,
   Alert,
+  Pagination,
 };

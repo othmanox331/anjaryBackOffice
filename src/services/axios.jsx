@@ -60,7 +60,6 @@ const APIs = {
         formData.append("isBestSeller", params.isBestSeller);
         formData.append("StockQuantity", params.stockQuantity);
         formData.append("CategoryId", params.category);
-        // formData.append("ImagesString", JSON.stringify(params.images));
         params.images.forEach((item, index) => {
           formData.append(`Images[${index}].Image`, item.Image);
           formData.append(`Images[${index}].ImageName`, "kjk");
@@ -71,6 +70,76 @@ const APIs = {
         return response.data;
       } catch (error) {
         console.error("Error fetching data:", error);
+        throw error;
+      }
+    },
+
+    Update: async (params) => {
+      try {
+        const response = await backend.put(`/product/update`, params);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+      }
+    },
+    GetById: async (id) => {
+      try {
+        const response = await backend.get(`/product/` + id);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+      }
+    },
+    GetImagesById: async (id) => {
+      try {
+        const response = await backend.get(`/product/images/` + id);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+      }
+    },
+    DeleteImage: async (name) => {
+      try {
+        const response = await backend.delete(`/product/images/delete/` + name);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+      }
+    },
+    AddImage: async (image, id) => {
+      let formData = new FormData();
+      formData.append("image", image);
+      formData.append("Id", id);
+      try {
+        const response = await backend.post(`/product/images/add`, formData);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+      }
+    },
+    Delete: async (id) => {
+      try {
+        const response = await backend.delete(`/product/delete/` + id);
+        return response.data;
+      } catch (error) {
+        console.error("Error deleting :", error);
+        throw error;
+      }
+    },
+    UpdateIsPrinciple: async (params) => {
+      try {
+        const response = await backend.post(
+          `/product/isprincipale/update/`,
+          params
+        );
+        return response.data;
+      } catch (error) {
+        console.error("Error deleting :", error);
         throw error;
       }
     },

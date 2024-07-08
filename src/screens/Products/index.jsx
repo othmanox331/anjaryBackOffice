@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProductTable from "./components/Products";
-import { Card, Modal, Select, Alert } from "@components";
+import { Card, Modal, Select, Alert, Pagination } from "@components";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { StyledEngineProvider } from "@mui/material/styles";
@@ -8,9 +8,15 @@ import { FaPlus } from "react-icons/fa";
 import { TextField, FormControlLabel, Checkbox } from "@mui/material";
 import { APIs } from "@services";
 import Images from "./components/Images";
+import EditImages from "./components/EditImages";
+import { Bounce, toast } from "react-toastify";
 
+const defaultOption = { label: "", value: 0 };
 const Products = () => {
+  const [isModalUpdateImageOpen, setUsModalUpdateImageOpen] = useState(false);
+  const [isModalDelete, setIsModalDelete] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalUpdate, setIsModalUpdate] = useState(false);
   const [productInputs, setProductInputs] = useState({
     name: "",
     description: "",
@@ -19,13 +25,19 @@ const Products = () => {
     isBestSeller: false,
     category: 0,
   });
-  const [size, setSize] = useState(10);
+
+  const [size, setSize] = useState(5);
   const [page, setPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const [validateMessage, setValidateMessage] = useState([]);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [images, setImages] = useState([]);
+  const [imagesUpdate, setImagesUpdate] = useState([]);
+  const [Editedimages, setEditedimages] = useState([]);
+  const [catValue, setCatValue] = useState(null);
+  const [UpdateId, setUpdateId] = useState(0);
 
   useEffect(() => {
     fetchProduct();
@@ -37,7 +49,8 @@ const Products = () => {
       page: page,
       searchValue: searchValue,
     });
-    setProducts(response);
+    setProducts(response.content);
+    setTotalItems(response.totalItems);
   };
 
   const handleChange = (e) => {
@@ -50,8 +63,68 @@ const Products = () => {
 
   const handleSubmit = () => {
     if (validate()) {
-      handleAddProduct({ ...productInputs, images });
-      // setIsModalOpen(false);
+      if (isModalUpdate) {
+        if (handleUpdateProduct(productInputs)) {
+          toast.success("Product modifier avec success", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+
+          fetchProduct();
+          setIsModalOpen(false);
+          clearModal();
+        } else {
+          toast.error(response.message, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+        }
+      } else {
+        if (handleAddProduct({ ...productInputs, images })) {
+          toast.success("Product Ajouter avec success", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+
+          fetchProduct();
+          setIsModalOpen(false);
+          //setIsEditImageModalOpen(false);
+          clearModal();
+        } else {
+          toast.error(response.message, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+        }
+      }
     }
   };
 
@@ -64,20 +137,60 @@ const Products = () => {
       });
     });
     product.images = newImages;
-    await APIs.Product.Add(product);
+    const response = await APIs.Product.Add(product);
+    if (response.isSuccess) {
+      return true;
+    }
+
+    return false;
+  };
+  const handleUpdateProduct = async (product) => {
+    let params = { ...product, CategoryId: product.category, id: UpdateId };
+
+    const response = await APIs.Product.Update(params);
+    if (response.isSuccess) {
+      return true;
+    }
+
+    return false;
   };
 
   const handelModalOpen = async () => {
     const response = await APIs.Category.SelectList();
-    setCategories(response);
+    setCategories([...response, defaultOption]);
     setIsModalOpen(true);
+    setIsModalUpdate(false);
   };
 
-  const handelCategoryChange = (event, item) => {
+  const handelCategoryChange = (item) => {
     setProductInputs((prevState) => ({
       ...prevState,
       category: item.value,
     }));
+    setCatValue(item);
+  };
+
+  const handelUpdate = async (id) => {
+    const response = await APIs.Product.GetById(id);
+    if (response != null || response != undefined) {
+      const CategoriesResponse = await APIs.Category.SelectList();
+      setProductInputs({
+        name: response.name,
+        description: response.description,
+        price: response.price,
+        stockQuantity: response.stockQuantity,
+        isBestSeller: response.isBestSeller,
+        category: response.categoryId,
+      });
+      setCategories(CategoriesResponse);
+      const getCategoryObj = categories.find(
+        (ele) => ele.value === response.categoryId
+      );
+      setUpdateId(response.id);
+      setCatValue(getCategoryObj);
+      setIsModalOpen(true);
+      setIsModalUpdate(true);
+    }
   };
 
   const validate = () => {
@@ -110,6 +223,7 @@ const Products = () => {
   };
 
   const handelCloseModal = () => {
+    setCatValue("");
     setIsModalOpen(false);
     setValidateMessage([]);
 
@@ -125,6 +239,147 @@ const Products = () => {
       category: 0,
     });
     setImages([]);
+    setCatValue(defaultOption);
+  };
+
+  const handelEditImage = async (id) => {
+    setUpdateId(id);
+    fetchImages();
+    setUsModalUpdateImageOpen(true);
+  };
+
+  const fetchImages = async () => {
+    const response = await APIs.Product.GetImagesById(UpdateId);
+    setEditedimages(response);
+  };
+  const handelCloseModalUpdateImage = () => {
+    setUsModalUpdateImageOpen(false);
+  };
+  const handleSubmitUpdateImag = async () => {
+    const response = await APIs.Product.UpdateIsPrinciple(Editedimages);
+    if (response.isSuccess) {
+      toast.success("Product supprimer avec success", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+    } else {
+      toast.error(response.message, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+    }
+
+    handelCloseModalUpdateImage();
+  };
+
+  const handelAddImage = async (image) => {
+    const response = await APIs.Product.AddImage(image, UpdateId);
+    if (response.isSuccess) {
+      toast.success("Image ajouter avec success", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+      fetchImages();
+    } else {
+      toast.error(response.message, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+    }
+  };
+  const handelDeleteImage = async (name) => {
+    const response = await APIs.Product.DeleteImage(name);
+    if (response.isSuccess) {
+      toast.success("Image supprimer avec success", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+      fetchImages();
+    } else {
+      toast.error(response.message, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+    }
+  };
+
+  const handelDelete = (id) => {
+    setIsModalDelete(true);
+    setUpdateId(id);
+  };
+
+  const handleSubmitDelete = async () => {
+    const response = await APIs.Product.Delete(UpdateId);
+    if (response.isSuccess) {
+      toast.success("Product supprimer avec success", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+      fetchProduct();
+    } else {
+      toast.error(response.message, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+    }
+
+    setIsModalDelete(false);
   };
 
   return (
@@ -134,7 +389,17 @@ const Products = () => {
           <Col>
             <h2>Product list</h2>
           </Col>
-          <Col md="auto">
+          <Col md="auto d-flex align-items-center gap-3">
+            <TextField
+              autoFocus
+              margin="dense"
+              name="searchValue"
+              label="Recherche"
+              type="text"
+              fullWidth
+              value={searchValue}
+              onChange={(value) => setSearchValue(value.target.value)}
+            />
             <button onClick={handelModalOpen} className="btn btn-success">
               <FaPlus />
             </button>
@@ -143,23 +408,43 @@ const Products = () => {
         <Row>
           <Col>
             <StyledEngineProvider>
-              <ProductTable products={products} />
+              <ProductTable
+                products={products}
+                handelUpdate={handelUpdate}
+                handelEditImage={handelEditImage}
+                handelDelete={handelDelete}
+              />
             </StyledEngineProvider>
+          </Col>
+        </Row>
+        <Row className="mt-3">
+          <Col></Col>
+          <Col md="auto">
+            <Pagination
+              page={page}
+              count={Math.ceil(totalItems / size)}
+              handleChange={(event, value) => setPage(value)}
+            />
           </Col>
         </Row>
       </Card>
       <Modal
-        title="Add Product"
+        title={
+          isModalUpdate ? "Modifier un produit Product" : "Ajouter un Product"
+        }
         show={isModalOpen}
         onHide={handelCloseModal}
         onSave={handleSubmit}
-        size={"xl"}
+        size={isModalUpdate ? "lg" : "xl"}
       >
         <Row>
-          <Col md={6}>
-            <Images images={images} setImages={setImages} />
-          </Col>
-          <Col md={6}>
+          {!isModalUpdate && (
+            <Col md={6}>
+              <Images images={images} setImages={setImages} />
+            </Col>
+          )}
+
+          <Col md={isModalUpdate ? 12 : 6}>
             {validateMessage.length > 0 && (
               <Alert
                 messages={validateMessage}
@@ -229,8 +514,40 @@ const Products = () => {
               Lable="Category"
               onvaluechange={handelCategoryChange}
               Multiple={false}
+              value={catValue}
             />
           </Col>
+        </Row>
+      </Modal>
+
+      <Modal
+        title={"Modifier images Product"}
+        show={isModalUpdateImageOpen}
+        onHide={handelCloseModalUpdateImage}
+        onSave={handleSubmitUpdateImag}
+        size={"lg"}
+      >
+        <Row>
+          <Col md={12}>
+            <EditImages
+              _images={Editedimages}
+              set_images={setEditedimages}
+              handelDeleteImage={handelDeleteImage}
+              handelAddImage={handelAddImage}
+            />
+          </Col>
+        </Row>
+      </Modal>
+
+      <Modal
+        title={"Supprimer un Product"}
+        show={isModalDelete}
+        onHide={() => setIsModalDelete(false)}
+        onSave={handleSubmitDelete}
+        size={"lg"}
+      >
+        <Row>
+          <Col md={12}>Voulez vous vraiment supprimer le produit ??</Col>
         </Row>
       </Modal>
     </div>

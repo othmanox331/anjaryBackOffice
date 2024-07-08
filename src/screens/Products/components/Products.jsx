@@ -11,7 +11,12 @@ import {
 import { FaTrash, FaPen } from "react-icons/fa";
 import { IoMdImage } from "react-icons/io";
 
-const ProductTable = ({ products }) => {
+const ProductTable = ({
+  products,
+  handelUpdate,
+  handelDelete,
+  handelEditImage,
+}) => {
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -43,7 +48,6 @@ const ProductTable = ({ products }) => {
                 {new Date(product.createDate).toLocaleDateString()}
               </TableCell>
               <TableCell align="center">{product.category}</TableCell>
-              <TableCell align="center">{product.id}</TableCell>
               <TableCell align="center">
                 <button
                   className="btn btn-secondary me-2"

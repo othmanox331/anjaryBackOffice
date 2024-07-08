@@ -4,25 +4,10 @@ import Col from "react-bootstrap/Col";
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import unknown from "../../../common/unknown.png";
+import { FaPlus } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa6";
+import { URL } from "@common";
 import "./Images.css";
-
-const images_test = [
-  // {
-  //   imageName: unknown,
-  //   isPrinciple: true,
-  // },
-];
-
-const DefaultData = [
-  {
-    imageName: unknown,
-    isPrinciple: false,
-  },
-  {
-    imageName: unknown,
-    isPrinciple: false,
-  },
-];
 
 const Images = ({ images = [], setImages }) => {
   const fileInputRef = useRef(null);
@@ -35,10 +20,10 @@ const Images = ({ images = [], setImages }) => {
     setImages(images);
   };
 
-  const handleClick = (imageName) => {
+  const handleClick = (imagePath) => {
     const updatedImages = images.map((image) => ({
       ...image,
-      isPrinciple: image.imageName === imageName,
+      isPrinciple: image.imagePath === imagePath,
     }));
     setData(updatedImages);
   };
@@ -49,12 +34,12 @@ const Images = ({ images = [], setImages }) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const newImage = {
-          imageName: reader.result,
+          imagePath: reader.result,
           Image: file,
           isPrinciple: true,
         };
         const updatedImages = images.map((image) => ({
-          imagePath: image.imageName,
+          imagePath: image.imagePath,
           Image: image.Image,
           isPrinciple: false,
         }));
@@ -65,8 +50,8 @@ const Images = ({ images = [], setImages }) => {
     }
   };
 
-  const handleDelete = (imageName) => {
-    const updatedImages = images.filter((img) => img.imageName !== imageName);
+  const handleDelete = (imagePath) => {
+    const updatedImages = images.filter((img) => img.imagePath !== imagePath);
     setData(updatedImages);
   };
 
@@ -77,8 +62,8 @@ const Images = ({ images = [], setImages }) => {
   return (
     <Row>
       <Col md="4 image_side_holder">
-        <button onClick={handlePrincipleClick} className="mt-3">
-          Upload New Image
+        <button onClick={handlePrincipleClick} className="mt-3 add_image">
+          <FaPlus size={34} />
         </button>
 
         {images
@@ -86,25 +71,46 @@ const Images = ({ images = [], setImages }) => {
           .map((item, index) => (
             <div key={index} className="side_image mb-3 position-relative">
               <img
-                src={item.imageName}
+                src={
+                  item.imagePath.startsWith("data:image")
+                    ? item.imagePath
+                    : `${URL}images/${item.imagePath}`
+                }
                 alt={`Image ${index}`}
-                onClick={() => handleClick(item.imageName)}
+                // onClick={() => handleClick(item.imagePath)}
               />
-              {item.imageName !== unknown && (
+              {item.imagePath !== unknown && (
                 <>
-                  <input
-                    type="radio"
-                    name="principleImage"
-                    checked={item.isPrinciple}
-                    onChange={() => handleClick(item.imageName)}
-                    className="position-absolute top-0 start-0 m-2"
-                  />
-                  <button
-                    onClick={() => handleDelete(item.imageName)}
-                    className="position-absolute top-0 end-0 m-2"
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip id="tooltip-principle">
+                        Rendre Cette image principale
+                      </Tooltip>
+                    }
                   >
-                    Delete
-                  </button>
+                    <input
+                      type="radio"
+                      name="principleImage"
+                      checked={item.isPrinciple}
+                      onChange={() => handleClick(item.imagePath)}
+                      className="position-absolute top-0 start-0 m-2"
+                    />
+                  </OverlayTrigger>
+
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip id="tooltip-principle">
+                        Supprimer l'image
+                      </Tooltip>
+                    }
+                  >
+                    <button
+                      onClick={() => handleDelete(item.imagePath)}
+                      className="position-absolute top-0 end-0 m-2 delete_botton"
+                    >
+                      <FaTrash size={20} />
+                    </button>
+                  </OverlayTrigger>
                 </>
               )}
             </div>
@@ -121,20 +127,34 @@ const Images = ({ images = [], setImages }) => {
           >
             <div className="side_image principle position-relative">
               <img
-                src={images.find((img) => img.isPrinciple).imageName}
+                src={
+                  images
+                    .find((img) => img.isPrinciple)
+                    .imagePath.startsWith("data:image")
+                    ? images.find((img) => img.isPrinciple).imagePath
+                    : `${URL}images/${
+                        images.find((img) => img.isPrinciple).imagePath
+                      }`
+                }
                 alt="Principle Image"
               />
-              {images.find((img) => img.isPrinciple).imageName != unknown && (
-                <button
-                  onClick={() =>
-                    handleDelete(
-                      images.find((img) => img.isPrinciple).imageName
-                    )
+              {images.find((img) => img.isPrinciple).imagePath != unknown && (
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id="tooltip-principle">Supprimer l'image</Tooltip>
                   }
-                  className="position-absolute top-0 end-0 m-2"
                 >
-                  Delete
-                </button>
+                  <button
+                    onClick={() =>
+                      handleDelete(
+                        images.find((img) => img.isPrinciple).imageName
+                      )
+                    }
+                    className="position-absolute top-0 end-0 m-2 delete_botton"
+                  >
+                    <FaTrash size={24} />
+                  </button>
+                </OverlayTrigger>
               )}
             </div>
           </OverlayTrigger>

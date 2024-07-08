@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CategoryTable from "./CategoryTable";
-import { Card, Modal, DragAndDrop, Alert } from "@components";
+import { Card, Modal, DragAndDrop, Alert, Pagination } from "@components";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { StyledEngineProvider } from "@mui/material/styles";
@@ -25,6 +25,7 @@ const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [size, setSize] = useState(10);
   const [page, setPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const [categoryInputs, setCategoryInputs] = useState({
     name: "",
@@ -39,7 +40,8 @@ const Categories = () => {
 
   const fetchCategories = async () => {
     let response = await APIs.Category.List(size, page, searchValue);
-    setCategories(response);
+    setCategories(response.content);
+    setTotalItems(response.totalItems);
   };
 
   const handleChange = (e) => {
@@ -320,6 +322,16 @@ const Categories = () => {
                 handelEditImage={handelEditImage}
               />
             </StyledEngineProvider>
+          </Col>
+        </Row>
+        <Row className="mt-3">
+          <Col></Col>
+          <Col md="auto">
+            <Pagination
+              page={page}
+              count={Math.ceil(totalItems / size)}
+              handleChange={(event, value) => setPage(value)}
+            />
           </Col>
         </Row>
       </Card>
