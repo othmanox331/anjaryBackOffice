@@ -12,15 +12,10 @@ const APIs = {
       }
     },
 
-    List: async () => {
+    List: async (params) => {
       try {
-        const response = await backend.get(`/order/list`);
-        if (Array.isArray(response.data)) {
-          return response.data;
-        } else {
-          // Transform the response data to an array if necessary
-          return Object.values(response.data);
-        }
+        const response = await backend.post(`/order/list`, params);
+        return response.data;
       } catch (error) {
         console.error("Error fetching data:", error);
         throw error;

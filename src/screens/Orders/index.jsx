@@ -51,6 +51,9 @@ const TableHeaderData = [
   },
 ];
 const Ordes = () => {
+  const [size, setSize] = useState(10);
+  const [page, setPage] = useState(1);
+  const [searchValue, setSearchValue] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [FullName, setFullName] = useState("");
   const [PhoneNumber, setPhoneNumber] = useState("");
@@ -69,7 +72,11 @@ const Ordes = () => {
 
   const fetchOrders = async () => {
     try {
-      const data = await APIs.Order.List();
+      const data = await APIs.Order.List({
+        size: size,
+        page: page,
+        searchValue: searchValue,
+      });
       const formattedData = data.map((order) => ({
         ...order,
         status: (
@@ -142,7 +149,7 @@ const Ordes = () => {
         postalCode: PostalCode,
         address: Address,
         address2: Address2,
-        Products_Ids: Products.map((item) => item.value),
+        Products_Ids: Products && Products.map((item) => item.value),
       })
     ) {
       toast.success("Order Added successfully", {
@@ -278,17 +285,18 @@ const Ordes = () => {
             />
           </Col>
           <Col md={12}>
-            {Products.map((product) => {
-              <Row>
-                <Col>{product.label}</Col>
-                <Col md="auto">
-                  <Row>
-                    <Col md={12}>Quantity</Col>
-                    <Col md={12}>{/* <Quantity /> */}</Col>
-                  </Row>
-                </Col>
-              </Row>;
-            })}
+            {Products &&
+              Products.map((product) => {
+                <Row>
+                  <Col>{product.label}</Col>
+                  <Col md="auto">
+                    <Row>
+                      <Col md={12}>Quantity</Col>
+                      <Col md={12}>{/* <Quantity /> */}</Col>
+                    </Row>
+                  </Col>
+                </Row>;
+              })}
           </Col>
         </Row>
       </Modal>
