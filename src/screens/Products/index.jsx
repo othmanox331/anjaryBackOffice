@@ -23,7 +23,6 @@ const Products = () => {
     price: "",
     stockQuantity: "",
     isBestSeller: false,
-    category: 0,
   });
 
   const [size, setSize] = useState(5);
@@ -61,10 +60,10 @@ const Products = () => {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validate()) {
       if (isModalUpdate) {
-        if (handleUpdateProduct(productInputs)) {
+        if (await handleUpdateProduct(productInputs)) {
           toast.success("Product modifier avec success", {
             position: "bottom-right",
             autoClose: 5000,
@@ -94,7 +93,7 @@ const Products = () => {
           });
         }
       } else {
-        if (handleAddProduct({ ...productInputs, images })) {
+        if (await handleAddProduct({ ...productInputs, images })) {
           toast.success("Product Ajouter avec success", {
             position: "bottom-right",
             autoClose: 5000,
@@ -106,7 +105,6 @@ const Products = () => {
             theme: "colored",
             transition: Bounce,
           });
-
           fetchProduct();
           setIsModalOpen(false);
           //setIsEditImageModalOpen(false);
@@ -146,13 +144,17 @@ const Products = () => {
   };
   const handleUpdateProduct = async (product) => {
     let params = { ...product, CategoryId: product.category, id: UpdateId };
-
-    const response = await APIs.Product.Update(params);
-    if (response.isSuccess) {
-      return true;
+    delete params.category;
+    try {
+      const response = await APIs.Product.Update(params);
+      if (response.isSuccess) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
     }
-
-    return false;
   };
 
   const handelModalOpen = async () => {
@@ -183,11 +185,8 @@ const Products = () => {
         category: response.categoryId,
       });
       setCategories(CategoriesResponse);
-      const getCategoryObj = categories.find(
-        (ele) => ele.value === response.categoryId
-      );
       setUpdateId(response.id);
-      setCatValue(getCategoryObj);
+      setCatValue(categories.find((ele) => ele.value === response.categoryId));
       setIsModalOpen(true);
       setIsModalUpdate(true);
     }
@@ -214,7 +213,7 @@ const Products = () => {
     if (productInputs.stockQuantity < 0) {
       messages.push("La quantité en stock non valide.");
     }
-    if (productInputs.category === 0) {
+    if (productInputs.categoryId === 0) {
       messages.push("La catégorie du produit est vide.");
     }
 
@@ -236,7 +235,6 @@ const Products = () => {
       price: "",
       stockQuantity: "",
       isBestSeller: false,
-      category: 0,
     });
     setImages([]);
     setCatValue(defaultOption);
@@ -244,13 +242,13 @@ const Products = () => {
 
   const handelEditImage = async (id) => {
     setUpdateId(id);
-    fetchImages();
-    setUsModalUpdateImageOpen(true);
+    await fetchImages(id);
   };
 
-  const fetchImages = async () => {
-    const response = await APIs.Product.GetImagesById(UpdateId);
+  const fetchImages = async (id) => {
+    const response = await APIs.Product.GetImagesById(id);
     setEditedimages(response);
+    setUsModalUpdateImageOpen(true);
   };
   const handelCloseModalUpdateImage = () => {
     setUsModalUpdateImageOpen(false);
@@ -300,7 +298,7 @@ const Products = () => {
         theme: "colored",
         transition: Bounce,
       });
-      fetchImages();
+      await fetchImages(UpdateId);
     } else {
       toast.error(response.message, {
         position: "bottom-right",
@@ -329,7 +327,7 @@ const Products = () => {
         theme: "colored",
         transition: Bounce,
       });
-      fetchImages();
+      await fetchImages(UpdateId);
     } else {
       toast.error(response.message, {
         position: "bottom-right",

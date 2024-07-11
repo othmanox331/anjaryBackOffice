@@ -72,7 +72,7 @@ const APIs = {
     Update: async (params) => {
       try {
         const response = await backend.put(`/product/update`, params);
-        return response.data;
+        return response?.data;
       } catch (error) {
         console.error("Error fetching data:", error);
         throw error;

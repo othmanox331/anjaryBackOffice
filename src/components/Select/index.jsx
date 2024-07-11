@@ -4,6 +4,9 @@ import Autocomplete from "@mui/material/Autocomplete";
 
 export default function index({ data, Lable, onvaluechange, Multiple, value }) {
   console.log(JSON.stringify(data), value);
+
+  // Ensure value is always defined
+  const controlledValue = value !== undefined ? value : Multiple ? [] : null;
   return (
     <Autocomplete
       multiple={Multiple}
@@ -13,7 +16,7 @@ export default function index({ data, Lable, onvaluechange, Multiple, value }) {
       getOptionLabel={(option) => option.label}
       renderInput={(params) => <TextField {...params} label={Lable} />}
       onChange={(event, newValue) => onvaluechange(newValue)}
-      value={value}
+      value={controlledValue}
     />
   );
 }
